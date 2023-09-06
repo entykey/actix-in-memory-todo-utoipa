@@ -20,3 +20,6 @@ If you want to see some logging, you may prepend the command with `RUST_LOG=debu
 ```bash
 RUST_LOG=debug cargo run
 ```
+
+# OpenAPI Preview ⚙️
+![api-endpoints](open_api_preview.png)

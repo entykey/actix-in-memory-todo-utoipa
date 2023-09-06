@@ -25,6 +25,7 @@ use utoipa_swagger_ui::SwaggerUi;
 use crate::todo::{ErrorResponse, TodoStore};
 
 mod todo;
+mod collect;
 
 const API_KEY_NAME: &str = "todo_apikey";
 const API_KEY: &str = "utoipa-rocks";   // value
@@ -33,9 +34,9 @@ const API_KEY: &str = "utoipa-rocks";   // value
 
 #[actix_web::main]
 async fn main() -> Result<(), impl Error> {
-    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+    //env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    log::info!("🚀 starting HTTP server at http://localhost:8080");
+    //log::info!("🚀 starting HTTP server at http://localhost:8080");
 
     
     #[derive(OpenApi)]
@@ -46,7 +47,8 @@ async fn main() -> Result<(), impl Error> {
             todo::delete_todo,
             todo::get_todo_by_id,
             todo::update_todo,
-            todo::search_todos
+            todo::search_todos,
+            collect::collect
         ),
         components(
             schemas(todo::Todo, todo::TodoUpdateRequest, todo::ErrorResponse)
@@ -75,15 +77,15 @@ async fn main() -> Result<(), impl Error> {
     let openapi = ApiDoc::openapi();
 
     // launch web browser
-    if webbrowser::open("http://127.0.0.1:8080/rapidoc").is_ok() {
-        println!("Rapidoc launched ✅")
-    }
+    // if webbrowser::open("http://127.0.0.1:8080/rapidoc").is_ok() {
+    //     println!("Rapidoc launched ✅")
+    // }
     if webbrowser::open("http://127.0.0.1:8080/swagger-ui/").is_ok() {
         println!("SwaggerUI launched ✅")
     }
-    if webbrowser::open("http://127.0.0.1:8080/redoc").is_ok() {
-        println!("Redoc launched ✅")
-    }
+    // if webbrowser::open("http://127.0.0.1:8080/redoc").is_ok() {
+    //     println!("Redoc launched ✅")
+    // }
 
 
 
@@ -92,6 +94,7 @@ async fn main() -> Result<(), impl Error> {
         App::new()
             .wrap(Logger::default())
             .configure(todo::configure(store.clone()))
+            .configure(collect::configure())
 
             /* redoc */
             .service(Redoc::with_url("/redoc", openapi.clone()))

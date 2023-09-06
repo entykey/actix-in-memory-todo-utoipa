@@ -62,6 +62,7 @@ pub(super) enum ErrorResponse {
     Unauthorized(String),
 }
 
+
 /// Get list of todos.
 ///
 /// List todos from in-memory todo store.
